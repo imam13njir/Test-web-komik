@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORE_READER_v1.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        
+        body { 
+            font-family: 'Fira Code', monospace; 
+            background-color: #050505; 
+            color: #00FF00; 
+            overflow-x: hidden;
+        }
+
+        /* Efek Garis TV Jadul (Scanline) */
+        .scanline {
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(to right, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        /* Glow Efek untuk Teks */
+        .glow {
+            text-shadow: 0 0 5px #00FF00, 0 0 10px #00FF00;
+        }
+
+        /* Container Komik Vertikal */
+        .comic-page {
+            border-left: 1px solid #004400;
+            border-right: 1px solid #004400;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+    <div class="scanline"></div>
+
+    <header class="max-w-2xl mx-auto border-b border-green-900 mb-10 pb-4">
+        <h1 class="text-2xl font-bold tracking-tighter glow">[ TERMINAL_READER_v1 ]</h1>
+        <div class="flex justify-between text-xs mt-2 opacity-70">
+            <span>STATUS: <span class="animate-pulse">CONNECTED</span></span>
+            <span>DATA_SOURCE: GITHUB_DB</span>
+        </div>
+    </header>
+
+    <main id="reader" class="max-w-2xl mx-auto comic-page space-y-0 bg-black">
+        <div id="loading" class="py-20 text-center">
+            <p class="animate-bounce">>> INITIALIZING_DATA_FETCH...</p>
+        </div>
+    </main>
+
+    <footer class="max-w-2xl mx-auto mt-10 py-6 border-t border-green-900 text-center">
+        <p class="text-xs opacity-50 mb-4">// END_OF_TRANSMISSION</p>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" 
+                class="border border-green-500 px-4 py-2 hover:bg-green-500 hover:text-black transition-all">
+            RETURN_TO_TOP
+        </button>
+    </footer>
+
+    <script>
+        // Simulasi Data JSON (Nanti bot Python kamu yang update ini di GitHub)
+        const database = {
+            "title": "Project Comic",
+            "chapter": "01",
+            "images": [
+                "https://srvr1.fast-cdn.space/manga/M/Mercenary-Enrollment/Chapter-278/001.webp",
+                "https://srvr1.fast-cdn.space/manga/M/Mercenary-Enrollment/Chapter-278/002.webp",
+                "https://srvr1.fast-cdn.space/manga/M/Mercenary-Enrollment/Chapter-278/003.webp",
+                "https://srvr1.fast-cdn.space/manga/M/Mercenary-Enrollment/Chapter-278/004.webp"
+            ]
+        };
+
+        const reader = document.getElementById('reader');
+        const loading = document.getElementById('loading');
+
+        // Fungsi Memuat Gambar
+        function loadImages() {
+            setTimeout(() => {
+                loading.style.display = 'none';
+                
+                database.images.forEach((url, i) => {
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.alt = `DATA_SEGMENT_${i}`;
+                    img.className = "w-full block transition-opacity duration-1000 grayscale hover:grayscale-0";
+                    
+                    // Supaya gambar muncul halus (fade in)
+                    img.style.opacity = 0;
+                    img.onload = () => img.style.opacity = 1;
+                    
+                    reader.appendChild(img);
+                });
+            }, 1500); // Simulasi delay loading terminal
+        }
+
+        loadImages();
+    </script>
+</body>
+</html>
